@@ -110,8 +110,8 @@ text=lob_data["Completion"].round(1),
 color="LOB"
 )
 
-st.plotly_chart(fig,use_container_width=True)
-st.plotly_chart(fig,use_container_width=True)
+st.plotly_chart(fig,use_container_width=True,key="lob_chart")
+
 
 # -------------------------------
 # INSURER MIGRATION TRACKER
@@ -153,7 +153,7 @@ y="Completion %",
 color="LOB"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True,key="insurer_chart")
 
 # -------------------------
 # MIGRATION FORECAST
@@ -234,7 +234,7 @@ y="Conversion",
 color="Scenario"
 )
 
-st.plotly_chart(fig,use_container_width=True)
+st.plotly_chart(fig,use_container_width=True,key="revenue_chart")
 
 # -------------------------
 # INSURER RISK HEATMAP
@@ -334,7 +334,7 @@ daily_df = pd.DataFrame({
 
 fig = px.bar(daily_df,x="Metric",y="Value",color="Metric")
 
-st.plotly_chart(fig,use_container_width=True)
+st.plotly_chart(fig,use_container_width=True,key="daily_chart")
 
 # -------------------------
 # WORKSTREAM PROGRESS
@@ -357,3 +357,4 @@ fig = px.bar(workstreams,x="Workstream",y="Progress",color="Progress")
 
 
 st.plotly_chart(fig,use_container_width=True)
+
