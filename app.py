@@ -111,6 +111,49 @@ color="LOB"
 )
 
 st.plotly_chart(fig,use_container_width=True)
+st.plotly_chart(fig,use_container_width=True)
+
+# -------------------------------
+# INSURER MIGRATION TRACKER
+# -------------------------------
+
+st.subheader("Insurer-wise Migration Progress")
+
+motor_insurers = [
+"HDFC Ergo",
+"ICICI Lombard",
+"Bajaj Allianz",
+"Tata AIG"
+]
+
+health_insurers = [
+"Star Health",
+"Niva Bupa",
+"Care Health",
+"Aditya Birla Health"
+]
+
+life_insurers = [
+"HDFC Life",
+"ICICI Prudential",
+"SBI Life",
+"Max Life"
+]
+
+insurer_df = pd.DataFrame({
+"Insurer": motor_insurers + health_insurers + life_insurers,
+"LOB": ["Motor"]*4 + ["Health"]*4 + ["Life"]*4,
+"Completion %": [60,50,40,30,70,65,55,45,35,25,20,15]
+})
+
+fig = px.bar(
+insurer_df,
+x="Insurer",
+y="Completion %",
+color="LOB"
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 # -------------------------
 # MIGRATION FORECAST
@@ -150,6 +193,48 @@ col1,col2 = st.columns(2)
 
 col1.metric("Total Renewal Revenue", f"₹{round(total_rev/10000000,2)} Cr")
 col2.metric("Revenue at Risk", f"₹{round(revenue_risk/10000000,2)} Cr")
+# -------------------------------
+# RENEWAL REVENUE SIMULATOR
+# -------------------------------
+
+st.subheader("Renewal Revenue Risk Simulator")
+
+conversion_baseline = st.slider(
+"Expected Renewal Conversion %",
+70,100,85
+)
+
+conversion_actual = st.slider(
+"Actual Renewal Conversion %",
+60,100,80
+)
+
+conversion_drop = conversion_baseline - conversion_actual
+
+revenue_loss = total_rev * (conversion_drop/100)
+
+col1,col2 = st.columns(2)
+
+col1.metric("Conversion Drop", f"{conversion_drop}%")
+
+col2.metric(
+"Estimated Revenue Loss",
+f"₹{round(revenue_loss/10000000,2)} Cr"
+)
+
+risk_df = pd.DataFrame({
+"Scenario":["Baseline","Actual"],
+"Conversion":[conversion_baseline,conversion_actual]
+})
+
+fig = px.bar(
+risk_df,
+x="Scenario",
+y="Conversion",
+color="Scenario"
+)
+
+st.plotly_chart(fig,use_container_width=True)
 
 # -------------------------
 # INSURER RISK HEATMAP
@@ -221,6 +306,35 @@ timeline = pd.DataFrame({
 })
 
 st.dataframe(timeline,use_container_width=True)
+# -------------------------------
+# DAILY COMMAND CENTER
+# -------------------------------
+
+st.subheader("Daily Migration Command Center")
+
+attempted = st.number_input("Renewals Attempted Today", value=10000)
+issued = st.number_input("Renewals Issued Today", value=9200)
+
+failures = attempted - issued
+
+success_rate = issued / attempted * 100 if attempted > 0 else 0
+
+col1,col2,col3 = st.columns(3)
+
+col1.metric("Renewals Attempted", attempted)
+col2.metric("Renewals Issued", issued)
+col3.metric("Failures", failures)
+
+st.metric("Today's Success Rate", f"{round(success_rate,2)}%")
+
+daily_df = pd.DataFrame({
+"Metric":["Attempted","Issued","Failures"],
+"Value":[attempted,issued,failures]
+})
+
+fig = px.bar(daily_df,x="Metric",y="Value",color="Metric")
+
+st.plotly_chart(fig,use_container_width=True)
 
 # -------------------------
 # WORKSTREAM PROGRESS
@@ -240,5 +354,6 @@ workstreams = pd.DataFrame({
 })
 
 fig = px.bar(workstreams,x="Workstream",y="Progress",color="Progress")
+
 
 st.plotly_chart(fig,use_container_width=True)
